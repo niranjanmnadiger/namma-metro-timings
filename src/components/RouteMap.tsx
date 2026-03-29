@@ -1,11 +1,11 @@
 import type { JourneyLeg } from '../utils/schedule'
-import { LINE_COLORS, type LineKey } from '../data/lines'
+import { type LineKey } from '../data/lines'
 
 interface Props { legs: JourneyLeg[] }
 
 const LINE_COLOR_HEX: Record<LineKey, string> = {
   purple: '#a855f7',
-  green:  '#22c55e',
+  green: '#22c55e',
   yellow: '#eab308',
 }
 
@@ -17,7 +17,7 @@ export default function RouteMap({ legs }: Props) {
 
   legs.forEach((leg, li) => {
     const isFirst = li === 0
-    const isLast  = li === legs.length - 1
+    const isLast = li === legs.length - 1
 
     stops.push({
       name: leg.from,
@@ -37,11 +37,11 @@ export default function RouteMap({ legs }: Props) {
   })
 
   // SVG layout: vertical strip, each stop is spaced 44px apart
-  const STOP_H   = 44
-  const LINE_X   = 24
-  const LABEL_X  = 42
-  const height   = Math.max(160, stops.length * STOP_H + 24)
-  const width    = 300
+  const STOP_H = 44
+  const LINE_X = 24
+  const LABEL_X = 42
+  const height = Math.max(160, stops.length * STOP_H + 24)
+  const width = 300
 
   return (
     <div style={{
@@ -101,8 +101,8 @@ export default function RouteMap({ legs }: Props) {
             }
 
             const isInterchange = stop.type === 'interchange'
-            const isEndpoint    = stop.type === 'start' || stop.type === 'end'
-            const r             = isEndpoint ? 7 : isInterchange ? 7 : 5
+            const isEndpoint = stop.type === 'start' || stop.type === 'end'
+            const r = isEndpoint ? 7 : isInterchange ? 7 : 5
 
             return (
               <g key={`stop-${i}`}>
