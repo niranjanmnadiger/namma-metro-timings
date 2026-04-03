@@ -45,12 +45,29 @@ export default function Header({ now, schedKey, isHoliday, is2nd4th }: Props) {
         fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: 3, color: 'var(--muted2)',
         textTransform: 'uppercase', marginBottom: 6
       }}>
-        ನಮ್ಮ ಮೆಟ್ರೋ · Bengaluru
+        ನಮ್ಮ ಮೆಟ್ರೋ ಬೆಂಗಳೂರು | Namma Metro Bengaluru
+
       </div>
 
-      <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: -0.5, lineHeight: 1.1 }}>
-        Namma Metro<br />
-        <em style={{ fontStyle: 'normal', color: 'var(--purple-ll)' }}>Trip Planner</em>
+      <h1
+        style={{
+          margin: 0,
+          fontSize: "clamp(2.6rem, 5vw, 4.5rem)",
+          fontWeight: 700,
+          letterSpacing: "-0.04em",
+          lineHeight: 1.2,
+          color: "#f5f5f7",
+        }}
+      >
+        <span style={{ display: "block" }}>ನಮ್ಮ ಮೆಟ್ರೋ</span>
+        <span
+          style={{
+            display: "block",
+            color: "#b48eff",
+          }}
+        >
+          Trip Planner
+        </span>
       </h1>
 
       {/* clock chips */}

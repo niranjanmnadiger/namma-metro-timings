@@ -11,6 +11,7 @@ import DayOverride from './components/DayOverride'
 import JourneyResult from './components/JourneyResult'
 import FareCard from './components/FareCard'
 import RouteMap from './components/RouteMap'
+import { Footer } from './components/Footer'
 
 export default function App() {
   const now = useClock()
@@ -157,6 +158,11 @@ export default function App() {
           </>
         )}
       </div>
+
+      <footer>
+        <Footer />
+      </footer>
+
     </div>
   )
 }
