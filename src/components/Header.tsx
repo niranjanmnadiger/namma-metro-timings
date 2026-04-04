@@ -52,8 +52,8 @@ export default function Header({ now, schedKey, isHoliday, is2nd4th }: Props) {
       <h1
         style={{
           margin: 0,
-          fontSize: "clamp(2.6rem, 5vw, 4.5rem)",
-          fontWeight: 700,
+          fontSize: "clamp(1.8rem, 3.5vw, 3rem)",
+          fontWeight: 600,
           letterSpacing: "-0.04em",
           lineHeight: 1.2,
           color: "#f5f5f7",
