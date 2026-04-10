@@ -15,6 +15,11 @@ function minsToTime(mins: number): string {
 export default function JourneyResult({ journey }: Props) {
   const { legs, schedKey, firstTrain, finalArrive, totalMins } = journey
 
+  const bigTimes = [
+    { label: 'Board around', val: '~' + fmtTime(firstTrain), color: 'var(--purple-ll)', sub: legs[0].from, isFirst: true },
+    { label: 'Arrive around', val: '~' + fmtTime(finalArrive), color: 'var(--green-ll)', sub: legs[legs.length - 1].to, isFirst: false },
+  ]
+
   return (
     <div className="animate-fadeUp" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
 
@@ -25,34 +30,39 @@ export default function JourneyResult({ journey }: Props) {
       }}>
         <div style={{
           fontFamily: 'var(--mono)', fontSize: 8, letterSpacing: 2.5,
-          textTransform: 'uppercase', color: 'var(--muted2)', marginBottom: 12
+          textTransform: 'uppercase', color: 'var(--muted2)', marginBottom: 12,
         }}>
           Journey Summary
         </div>
 
         {/* big times */}
         <div style={{
-          display: 'flex', marginBottom: 14, background: 'var(--s1)',
-          borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)'
+          display: 'flex', marginBottom: 10, background: 'var(--s1)',
+          borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)',
         }}>
-          {[
-            { label: 'Board at', val: fmtTime(firstTrain), color: 'var(--purple-ll)', sub: legs[0].from },
-            { label: 'Arrive by', val: fmtTime(finalArrive), color: 'var(--green-ll)', sub: legs[legs.length - 1].to },
-          ].map(({ label, val, color, sub }) => (
+          {bigTimes.map(({ label, val, color, sub, isFirst }) => (
             <div key={label} style={{
               flex: 1, padding: '12px 14px',
-              borderRight: label === 'Board at' ? '1px solid var(--border)' : undefined
+              borderRight: isFirst ? '1px solid var(--border)' : undefined,
             }}>
               <span style={{
                 display: 'block', fontSize: 8, fontFamily: 'var(--mono)',
-                letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--muted2)', marginBottom: 4
+                letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--muted2)', marginBottom: 4,
               }}>
                 {label}
               </span>
               <div style={{ fontFamily: 'var(--mono)', fontSize: 22, fontWeight: 700, lineHeight: 1, color }}>{val}</div>
-              <div style={{ fontSize: 10, color: 'var(--muted2)', marginTop: 3 }}>{sub}</div>
+              <div style={{ fontSize: 11, color: 'var(--muted2)', marginTop: 4 }}>{sub}</div>
             </div>
           ))}
+        </div>
+
+        {/* estimation note */}
+        <div style={{
+          fontSize: 10, color: 'var(--muted)', fontFamily: 'var(--mono)',
+          letterSpacing: 0.3, marginBottom: 12, paddingLeft: 1, lineHeight: 1.5,
+        }}>
+          ⏱ Estimates based on published timetable frequencies — actual trains may vary by a few minutes.
         </div>
 
         {/* meta rows */}
@@ -62,12 +72,13 @@ export default function JourneyResult({ journey }: Props) {
           { label: 'Total stops', val: String(legs.reduce((a, l) => a + l.stops, 0)) },
           { label: 'Schedule', val: schedKey.charAt(0).toUpperCase() + schedKey.slice(1) },
           ...(legs[0].waitMins > 0 ? [{ label: 'Wait for first train', val: `~${legs[0].waitMins} min` }] : []),
-        ].map(({ label, val }) => (
+        ].map(({ label, val }, idx, arr) => (
           <div key={label} style={{
-            display: 'flex', justifyContent: 'space-between',
-            alignItems: 'center', padding: '6px 0', borderBottom: '1px solid var(--border)'
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            padding: '7px 0',
+            borderBottom: idx < arr.length - 1 ? '1px solid var(--border)' : 'none',
           }}>
-            <span style={{ fontSize: 11, color: 'var(--muted2)' }}>{label}</span>
+            <span style={{ fontSize: 12, color: 'var(--muted2)' }}>{label}</span>
             <span style={{ fontSize: 12, fontFamily: 'var(--mono)', fontWeight: 700 }}>{val}</span>
           </div>
         ))}
@@ -81,55 +92,53 @@ export default function JourneyResult({ journey }: Props) {
         <div style={{
           padding: '10px 16px', fontFamily: 'var(--mono)', fontSize: 9,
           letterSpacing: 2, textTransform: 'uppercase', color: 'var(--muted2)',
-          borderBottom: '1px solid var(--border)'
+          borderBottom: '1px solid var(--border)',
         }}>
           🗺 &nbsp;Journey Timeline
         </div>
-        <div style={{ padding: '14px 16px' }}>
+        <div style={{ padding: '16px 16px 10px' }}>
           {legs.map((leg, i) => {
             const c = LINE_COLORS[leg.line]
             const isLast = i === legs.length - 1
             return (
               <div key={i}>
-                {/* departure row */}
-                <div style={{ display: 'flex', gap: 12 }}>
+                <div style={{ display: 'flex', gap: 14 }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 16, flexShrink: 0 }}>
                     <div style={{
-                      width: 10, height: 10, borderRadius: '50%', marginTop: 5, flexShrink: 0,
+                      width: 10, height: 10, borderRadius: '50%', marginTop: 4, flexShrink: 0,
                       border: `2px solid ${leg.isInterchange ? '#fde047' : c.dot}`,
                       background: leg.isInterchange ? 'rgba(234,179,8,0.15)' : c.bg,
                     }} />
                     <div style={{
-                      flex: 1, width: 2, minHeight: 14, margin: '2px auto',
+                      flex: 1, width: 2, minHeight: 18, margin: '3px auto',
                       background: `linear-gradient(180deg,${c.dot}80,${c.dot}20)`,
                     }} />
                   </div>
-                  <div style={{ flex: 1, paddingBottom: 14 }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, marginTop: 2 }}>{leg.from}</div>
-                    <div style={{ fontSize: 10, color: 'var(--muted2)', fontFamily: 'var(--mono)', marginTop: 2 }}>
+                  <div style={{ flex: 1, paddingBottom: 16 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, marginTop: 1 }}>{leg.from}</div>
+                    <div style={{ fontSize: 11, color: 'var(--muted2)', fontFamily: 'var(--mono)', marginTop: 3 }}>
                       {leg.line.charAt(0).toUpperCase() + leg.line.slice(1)} Line
                       {leg.isInterchange && ' · 🔄 Interchange'}
                     </div>
-                    <div style={{ fontFamily: 'var(--mono)', fontSize: 11, fontWeight: 700, marginTop: 4, color: c.text }}>
-                      Board {fmtTime(leg.trainTime)} &nbsp;·&nbsp; Towards {leg.term}
+                    <div style={{ fontFamily: 'var(--mono)', fontSize: 11, fontWeight: 700, marginTop: 5, color: c.text }}>
+                      Board ~{fmtTime(leg.trainTime)} &nbsp;·&nbsp; Towards {leg.term}
                     </div>
-                    <div style={{ fontSize: 10, color: 'var(--muted2)', fontFamily: 'var(--mono)', marginTop: 3 }}>
+                    <div style={{ fontSize: 11, color: 'var(--muted2)', marginTop: 3 }}>
                       {leg.stops} stop{leg.stops !== 1 ? 's' : ''} &nbsp;·&nbsp; ~{leg.travelMins} min ride
                     </div>
                   </div>
                 </div>
-                {/* arrival row (last leg only) */}
                 {isLast && (
-                  <div style={{ display: 'flex', gap: 12 }}>
+                  <div style={{ display: 'flex', gap: 14 }}>
                     <div style={{ width: 16, flexShrink: 0, display: 'flex', justifyContent: 'center' }}>
                       <div style={{
-                        width: 10, height: 10, borderRadius: '50%', marginTop: 5,
+                        width: 10, height: 10, borderRadius: '50%', marginTop: 4,
                         background: c.dot, border: `2px solid ${c.dot}`,
                       }} />
                     </div>
                     <div style={{ flex: 1, paddingBottom: 4 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, marginTop: 2 }}>{leg.to}</div>
-                      <div style={{ fontFamily: 'var(--mono)', fontSize: 11, fontWeight: 700, marginTop: 4, color: 'var(--green-ll)' }}>
+                      <div style={{ fontSize: 14, fontWeight: 600, marginTop: 1 }}>{leg.to}</div>
+                      <div style={{ fontFamily: 'var(--mono)', fontSize: 11, fontWeight: 700, marginTop: 5, color: 'var(--green-ll)' }}>
                         Arrive ~{fmtTime(leg.reach)}
                       </div>
                     </div>
@@ -141,8 +150,6 @@ export default function JourneyResult({ journey }: Props) {
         </div>
       </div>
 
-
-
       {/* ── LEG CARDS ── */}
       {legs.map((leg, i) => {
         const c = LINE_COLORS[leg.line]
@@ -152,29 +159,26 @@ export default function JourneyResult({ journey }: Props) {
 
             {/* leg header */}
             <div style={{
-              padding: '11px 15px', display: 'flex', alignItems: 'center', gap: 9,
+              padding: '11px 16px', display: 'flex', alignItems: 'center', gap: 9,
               fontWeight: 700, fontSize: 11, fontFamily: 'var(--mono)',
               background: c.bg, borderBottom: `1px solid ${c.border}`,
             }}>
-              <div style={{ width: 9, height: 9, borderRadius: '50%', background: c.dot, flexShrink: 0 }} />
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: c.dot, flexShrink: 0 }} />
               LEG {i + 1} OF {legs.length} &nbsp;·&nbsp; {leg.line.toUpperCase()} LINE
             </div>
 
-            <div style={{
-              background: 'var(--s1)', padding: '12px 15px',
-              display: 'flex', flexDirection: 'column', gap: 7
-            }}>
+            <div style={{ background: 'var(--s1)', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
 
               {/* interchange alert */}
               {leg.isInterchange && (
                 <div style={{
                   background: 'rgba(234,179,8,0.08)', border: '1px solid rgba(234,179,8,0.25)',
-                  borderRadius: 9, padding: '9px 12px', fontSize: 11, color: '#fde047',
-                  lineHeight: 1.5, marginBottom: 4,
+                  borderRadius: 9, padding: '10px 13px', fontSize: 12, color: '#fde047',
+                  lineHeight: 1.6, marginBottom: 2,
                 }}>
                   🔄 <strong style={{ color: '#fbbf24' }}>Interchange at {leg.from}</strong><br />
-                  Walk to the <strong>{lineName} Line</strong> platform. Next train at{' '}
-                  <strong>{fmtTime(leg.trainTime)}</strong>. Allow ~{INTERCHANGE_BUFFER} min.
+                  Walk to the <strong>{lineName} Line</strong> platform. Next train around{' '}
+                  <strong>~{fmtTime(leg.trainTime)}</strong>. Allow ~{INTERCHANGE_BUFFER} min.
                 </div>
               )}
 
@@ -182,60 +186,49 @@ export default function JourneyResult({ journey }: Props) {
               {i === 0 && leg.waitMins > 0 && (
                 <div>
                   <span style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 4,
+                    display: 'inline-flex', alignItems: 'center', gap: 5,
                     background: 'rgba(234,179,8,0.08)', border: '1px solid rgba(234,179,8,0.2)',
-                    borderRadius: 20, padding: '2px 8px', fontSize: 10,
-                    fontFamily: 'var(--mono)', color: '#fde047', marginBottom: 2,
+                    borderRadius: 20, padding: '3px 10px', fontSize: 11,
+                    fontFamily: 'var(--mono)', color: '#fde047',
                   }}>
                     ⏱ Wait ~{leg.waitMins} min for next train
                   </span>
                 </div>
               )}
 
-              {/* leg details */}
+              {/* from / to / direction */}
               {[
                 { label: 'From', val: leg.from },
                 { label: 'To', val: leg.to },
-                { label: 'Direction', val: `${leg.forward ? '→' : '←'} Towards ${leg.term}`, mono: true, muted: true },
-              ].map(({ label, val, mono, muted }) => (
-                <div key={label} style={{
-                  display: 'flex', justifyContent: 'space-between',
-                  alignItems: 'center', gap: 8
-                }}>
-                  <span style={{
-                    fontSize: 9, fontFamily: 'var(--mono)', letterSpacing: 1,
-                    color: 'var(--muted2)', textTransform: 'uppercase', flexShrink: 0
-                  }}>{label}</span>
-                  <span style={{
-                    fontSize: mono ? 10 : 12, textAlign: 'right', lineHeight: 1.35,
-                    fontFamily: mono ? 'var(--mono)' : undefined,
-                    color: muted ? 'var(--muted2)' : undefined,
-                    background: muted ? 'rgba(255,255,255,0.04)' : undefined,
-                    border: muted ? '1px solid var(--border)' : undefined,
-                    borderRadius: muted ? 5 : undefined,
-                    padding: muted ? '2px 7px' : undefined,
-                  }}>{val}</span>
+                { label: 'Direction', val: `${leg.forward ? '→' : '←'} Towards ${leg.term}`, tag: true },
+              ].map(({ label, val, tag }) => (
+                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 11, color: 'var(--muted2)', flexShrink: 0 }}>{label}</span>
+                  {tag ? (
+                    <span style={{
+                      fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--muted2)',
+                      background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)',
+                      borderRadius: 5, padding: '2px 8px',
+                    }}>{val}</span>
+                  ) : (
+                    <span style={{ fontSize: 13, fontWeight: 500, textAlign: 'right' }}>{val}</span>
+                  )}
                 </div>
               ))}
 
-              <div style={{ height: 1, background: 'var(--border)', margin: '3px 0' }} />
+              <div style={{ height: 1, background: 'var(--border)', margin: '2px 0' }} />
 
+              {/* timing rows */}
               {[
-                { label: 'Board at', val: fmtTime(leg.trainTime), color: 'var(--purple-ll)' },
+                { label: 'Board at', val: '~' + fmtTime(leg.trainTime), color: 'var(--purple-ll)' },
                 { label: 'Stops', val: String(leg.stops) },
                 { label: 'Ride time', val: `~${leg.travelMins} min` },
-                { label: 'Alight at', val: fmtTime(leg.reach), color: 'var(--green-ll)' },
+                { label: 'Alight at', val: '~' + fmtTime(leg.reach), color: 'var(--green-ll)' },
               ].map(({ label, val, color }) => (
-                <div key={label} style={{
-                  display: 'flex', justifyContent: 'space-between',
-                  alignItems: 'center', gap: 8
-                }}>
+                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 11, color: 'var(--muted2)', flexShrink: 0 }}>{label}</span>
                   <span style={{
-                    fontSize: 9, fontFamily: 'var(--mono)', letterSpacing: 1,
-                    color: 'var(--muted2)', textTransform: 'uppercase', flexShrink: 0
-                  }}>{label}</span>
-                  <span style={{
-                    fontSize: 12, fontFamily: 'var(--mono)', fontWeight: 700,
+                    fontSize: 13, fontFamily: 'var(--mono)', fontWeight: 700,
                     color: color ?? 'var(--text)',
                   }}>{val}</span>
                 </div>
@@ -243,18 +236,18 @@ export default function JourneyResult({ journey }: Props) {
 
               {/* next 3 trains */}
               {leg.upcomingTrains.length > 0 && (
-                <div style={{ marginTop: 4 }}>
+                <div style={{ marginTop: 6 }}>
                   <div style={{
-                    fontSize: 9, fontFamily: 'var(--mono)', letterSpacing: 1,
-                    color: 'var(--muted2)', textTransform: 'uppercase', marginBottom: 6
+                    fontSize: 10, fontFamily: 'var(--mono)', letterSpacing: 1,
+                    color: 'var(--muted2)', textTransform: 'uppercase', marginBottom: 7,
                   }}>
-                    Next trains from {leg.from}
+                    Upcoming trains from {leg.from}
                   </div>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                     {leg.upcomingTrains.map((m, j) => (
                       <span key={j} style={{
-                        fontFamily: 'var(--mono)', fontSize: 11, fontWeight: 700,
-                        padding: '4px 10px', borderRadius: 20,
+                        fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 700,
+                        padding: '5px 12px', borderRadius: 20,
                         background: j === 0 ? c.bg : 'rgba(255,255,255,0.04)',
                         border: `1px solid ${j === 0 ? c.border : 'var(--border)'}`,
                         color: j === 0 ? c.text : 'var(--muted2)',

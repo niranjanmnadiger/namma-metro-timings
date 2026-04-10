@@ -1,10 +1,10 @@
 import { LINES, MAJESTIC, RV_ROAD, type LineKey } from '../data/lines'
 import { HEADWAYS, type ScheduleKey } from '../data/timetable'
 
-export const MINS_PER_STOP = 3   // estimated travel time per stop
-export const INTERCHANGE_BUFFER = 7  // minutes to walk between platforms
+export const MINS_PER_STOP = 3
+export const INTERCHANGE_BUFFER = 7
 
-// ── Time math ────────────────────────────────────────────────────────────────
+// Time math
 
 export function toMins(hhmm: string): number {
   const [h, m] = hhmm.split(':').map(Number)
@@ -24,7 +24,7 @@ export function durStr(totalMins: number): string {
   return `${Math.floor(totalMins / 60)}h ${totalMins % 60}m`
 }
 
-// ── Schedule detection ────────────────────────────────────────────────────────
+// Schedule detection
 
 export function is2nd4thSat(d: Date): boolean {
   if (d.getDay() !== 6) return false
@@ -49,14 +49,14 @@ export function scheduleLabel(
   overrideHoliday: boolean,
   override2nd4thSat: boolean
 ): string {
-  if (overrideHoliday)    return 'PUBLIC HOLIDAY — SUNDAY SCH.'
-  if (override2nd4thSat)  return '2ND / 4TH SAT — SUNDAY SCH.'
-  if (key === 'sunday')   return 'SUNDAY SCHEDULE'
+  if (overrideHoliday) return 'PUBLIC HOLIDAY — SUNDAY SCH.'
+  if (override2nd4thSat) return '2ND / 4TH SAT — SUNDAY SCH.'
+  if (key === 'sunday') return 'SUNDAY SCHEDULE'
   if (key === 'saturday') return is2nd4thSat(d) ? '2ND/4TH SAT — SUNDAY SCH.' : 'SATURDAY SCHEDULE'
   return 'WEEKDAY SCHEDULE'
 }
 
-// ── Train timing ─────────────────────────────────────────────────────────────
+// Train timing
 
 export function isForward(line: LineKey, from: string, to: string): boolean {
   return LINES[line].indexOf(from) < LINES[line].indexOf(to)
@@ -71,7 +71,6 @@ export function diffStops(line: LineKey, a: string, b: string): number {
   return Math.abs(LINES[line].indexOf(a) - LINES[line].indexOf(b))
 }
 
-/** Returns the absolute minute-of-day for the next train, or null if no service */
 export function nextTrainMins(
   line: LineKey,
   forward: boolean,
@@ -94,7 +93,6 @@ export function nextTrainMins(
   return null
 }
 
-/** Returns next N train departure times (minute-of-day) for a given line/direction */
 export function nextNTrains(
   line: LineKey,
   forward: boolean,
@@ -122,7 +120,7 @@ export function nextNTrains(
   return results
 }
 
-// ── Path building ─────────────────────────────────────────────────────────────
+// Path building
 
 export interface PathLeg {
   line: LineKey
@@ -132,7 +130,7 @@ export interface PathLeg {
 
 export function buildPath(
   boardLine: LineKey, boardStation: string,
-  dropLine: LineKey,  dropStation: string
+  dropLine: LineKey, dropStation: string
 ): PathLeg[] {
   if (boardLine === dropLine) {
     return [{ line: boardLine, from: boardStation, to: dropStation }]
@@ -141,23 +139,23 @@ export function buildPath(
   if (pair.includes('purple') && pair.includes('green'))
     return [
       { line: boardLine, from: boardStation, to: MAJESTIC },
-      { line: dropLine,  from: MAJESTIC,     to: dropStation },
+      { line: dropLine, from: MAJESTIC, to: dropStation },
     ]
   if (pair.includes('green') && pair.includes('yellow'))
     return [
       { line: boardLine, from: boardStation, to: RV_ROAD },
-      { line: dropLine,  from: RV_ROAD,      to: dropStation },
+      { line: dropLine, from: RV_ROAD, to: dropStation },
     ]
   if (pair.includes('purple') && pair.includes('yellow'))
     return [
       { line: boardLine, from: boardStation, to: MAJESTIC },
-      { line: 'green',   from: MAJESTIC,     to: RV_ROAD  },
-      { line: dropLine,  from: RV_ROAD,      to: dropStation },
+      { line: 'green', from: MAJESTIC, to: RV_ROAD },
+      { line: dropLine, from: RV_ROAD, to: dropStation },
     ]
   return []
 }
 
-// ── Journey computation ───────────────────────────────────────────────────────
+// Journey computation
 
 export interface JourneyLeg extends PathLeg {
   forward: boolean
@@ -168,7 +166,7 @@ export interface JourneyLeg extends PathLeg {
   reach: Date
   waitMins: number
   isInterchange: boolean
-  upcomingTrains: number[]   // next 3 departures (mins of day)
+  upcomingTrains: number[]
 }
 
 export interface Journey {
@@ -181,7 +179,7 @@ export interface Journey {
 
 export function computeJourney(
   boardLine: LineKey, boardStation: string,
-  dropLine: LineKey,  dropStation: string,
+  dropLine: LineKey, dropStation: string,
   now: Date,
   schedKey: ScheduleKey
 ): Journey | null {
@@ -201,10 +199,10 @@ export function computeJourney(
     trainTime.setHours(Math.floor(nt / 60), nt % 60, 0, 0)
     if (trainTime < cur) trainTime.setDate(trainTime.getDate() + 1)
 
-    const stops      = diffStops(leg.line, leg.from, leg.to)
+    const stops = diffStops(leg.line, leg.from, leg.to)
     const travelMins = stops * MINS_PER_STOP
-    const reach      = addMins(trainTime, travelMins)
-    const waitMins   = Math.max(0, Math.round((trainTime.getTime() - cur.getTime()) / 60_000))
+    const reach = addMins(trainTime, travelMins)
+    const waitMins = Math.max(0, Math.round((trainTime.getTime() - cur.getTime()) / 60_000))
     const upcomingTrains = nextNTrains(leg.line, forward, cur, schedKey, 3)
 
     legs.push({
@@ -223,9 +221,9 @@ export function computeJourney(
     cur = addMins(reach, i < path.length - 1 ? INTERCHANGE_BUFFER : 0)
   }
 
-  const firstTrain  = legs[0].trainTime
+  const firstTrain = legs[0].trainTime
   const finalArrive = legs[legs.length - 1].reach
-  const totalMins   = Math.max(0, Math.round((finalArrive.getTime() - now.getTime()) / 60_000))
+  const totalMins = Math.max(0, Math.round((finalArrive.getTime() - now.getTime()) / 60_000))
 
   return { legs, schedKey, firstTrain, finalArrive, totalMins }
 }

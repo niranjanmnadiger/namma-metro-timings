@@ -132,7 +132,7 @@ export default function App() {
             background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)',
             borderRadius: 'var(--r)', padding: 20, textAlign: 'center', color: '#f87171', fontSize: 13, lineHeight: 1.6
           }}>
-            ⚠ {error}
+            {error}
           </div>
         )}
 
@@ -159,9 +159,7 @@ export default function App() {
         )}
       </div>
 
-      <footer>
-        <Footer />
-      </footer>
+      <Footer />
 
     </div>
   )

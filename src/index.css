@@ -27,9 +27,17 @@
   --muted: #5a5a70;
   --muted2: #8888a0;
 
-  --mono: 'Space Mono', monospace;
-  --sans: 'DM Sans', sans-serif;
+  /* Apple-adjacent sans stack — Geist first, falls back to system UI */
+  --sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'Space Mono', ui-monospace, 'SF Mono', Menlo, monospace;
   --r: 14px;
+
+  /* Fixed body scale — no clamp on body copy */
+  --text-xs:  10px;
+  --text-sm:  12px;
+  --text-base: 14px;
+  --text-md:  15px;
+  --text-lg:  18px;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,8 +49,10 @@ body {
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  font-size: 14px;
+  font-size: var(--text-base);   /* fixed 14px — body copy never clamps */
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 button { font-family: var(--sans); cursor: pointer; border: none; background: none; }
