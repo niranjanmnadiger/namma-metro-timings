@@ -33,11 +33,11 @@
   --r: 14px;
 
   /* Fixed body scale — no clamp on body copy */
-  --text-xs:  10px;
-  --text-sm:  12px;
-  --text-base: 14px;
-  --text-md:  15px;
-  --text-lg:  18px;
+  --text-xs:  12px;
+  --text-sm:  14px;
+  --text-base: 16px;
+  --text-md:  18px;
+  --text-lg:  20px;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -49,7 +49,7 @@ body {
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  font-size: var(--text-base);   /* fixed 14px — body copy never clamps */
+  font-size: var(--text-base);   /* fixed 16px — body copy never clamps */
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
