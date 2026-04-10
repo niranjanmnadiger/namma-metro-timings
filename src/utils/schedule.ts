@@ -39,6 +39,7 @@ export function getScheduleKey(
   if (overrideHoliday || override2nd4thSat) return 'sunday'
   const day = d.getDay()
   if (day === 0) return 'sunday'
+  if (day === 1) return 'monday'
   if (day === 6) return is2nd4thSat(d) ? 'sunday' : 'saturday'
   return 'weekday'
 }
@@ -53,6 +54,7 @@ export function scheduleLabel(
   if (override2nd4thSat) return '2ND / 4TH SAT — SUNDAY SCH.'
   if (key === 'sunday') return 'SUNDAY SCHEDULE'
   if (key === 'saturday') return is2nd4thSat(d) ? '2ND/4TH SAT — SUNDAY SCH.' : 'SATURDAY SCHEDULE'
+  if (key === 'monday') return 'MONDAY SCHEDULE'
   return 'WEEKDAY SCHEDULE'
 }
 

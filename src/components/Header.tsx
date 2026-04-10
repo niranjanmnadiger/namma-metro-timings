@@ -9,13 +9,14 @@ interface Props {
 }
 
 const BADGE_STYLE: Record<ScheduleKey, React.CSSProperties> = {
+  monday: { background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.35)', color: '#a5b4fc' },
   weekday: { background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', color: '#4ade80' },
   saturday: { background: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.3)', color: '#fde047' },
   sunday: { background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171' },
 }
 
 const PULSE_COLOR: Record<ScheduleKey, string> = {
-  weekday: '#4ade80', saturday: '#fde047', sunday: '#f87171',
+  monday: '#a5b4fc', weekday: '#4ade80', saturday: '#fde047', sunday: '#f87171',
 }
 
 export default function Header({ now, schedKey, isHoliday, is2nd4th }: Props) {
@@ -46,28 +47,18 @@ export default function Header({ now, schedKey, isHoliday, is2nd4th }: Props) {
         textTransform: 'uppercase', marginBottom: 6
       }}>
         ನಮ್ಮ ಮೆಟ್ರೋ ಬೆಂಗಳೂರು | Namma Metro Bengaluru
-
       </div>
 
-      <h1
-        style={{
-          margin: 0,
-          fontSize: "clamp(1.8rem, 3.5vw, 3rem)",
-          fontWeight: 600,
-          letterSpacing: "-0.04em",
-          lineHeight: 1.2,
-          color: "#f5f5f7",
-        }}
-      >
-        <span style={{ display: "block" }}>ನಮ್ಮ ಮೆಟ್ರೋ</span>
-        <span
-          style={{
-            display: "block",
-            color: "#b48eff",
-          }}
-        >
-          Trip Planner
-        </span>
+      <h1 style={{
+        margin: 0,
+        fontSize: 'clamp(1.8rem, 3.5vw, 3rem)',
+        fontWeight: 600,
+        letterSpacing: '-0.04em',
+        lineHeight: 1.2,
+        color: '#f5f5f7',
+      }}>
+        <span style={{ display: 'block' }}>ನಮ್ಮ ಮೆಟ್ರೋ</span>
+        <span style={{ display: 'block', color: '#b48eff' }}>Trip Planner</span>
       </h1>
 
       {/* clock chips */}
@@ -102,6 +93,34 @@ export default function Header({ now, schedKey, isHoliday, is2nd4th }: Props) {
           display: 'inline-block',
         }} />
         {label}
+      </div>
+
+      {/* disclaimer banner */}
+      <div style={{
+        marginTop: 14,
+        padding: '10px 13px',
+        borderRadius: 10,
+        background: 'rgba(234,179,8,0.05)',
+        border: '1px solid rgba(234,179,8,0.18)',
+        fontFamily: 'var(--mono)',
+        fontSize: 10,
+        color: 'rgba(253,224,71,0.65)',
+        lineHeight: 1.65,
+        letterSpacing: 0.2,
+        position: 'relative',
+        zIndex: 1,
+      }}>
+        <div style={{ fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 5, color: 'rgba(253,224,71,0.85)', fontSize: 9 }}>
+          heads up — static timetable
+        </div>
+        Times shown are <strong style={{ color: 'rgba(253,224,71,0.85)' }}>estimates</strong> based on BMRC's published headway windows (last synced Apr 2025).
+        Actual trains may arrive earlier or later due to operational variability, signal holds, or last-minute schedule changes.
+        <span style={{ display: 'block', marginTop: 5 }}>
+          Also: BMRC runs <strong style={{ color: 'rgba(253,224,71,0.85)' }}>short-loop trains</strong> on L1 (Purple) during peak hours — e.g. Kempegowda to Baiyappanahalli — which share the main track and effectively increase frequency in the central corridor. This app does not yet model those loops, so peak-hour estimates for inner-city Purple Line journeys may show longer waits than reality. Loop support is planned for a future update.
+        </span>
+        <span style={{ display: 'block', marginTop: 5 }}>
+          Always cross-check at <a href="https://www.bmrc.co.in" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(253,224,71,0.9)', textDecoration: 'underline' }}>bmrc.co.in</a> or the official Namma Metro app.
+        </span>
       </div>
     </header>
   )
