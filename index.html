@@ -1,12 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Namma Metro · Trip Planner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Namma Metro Trip Planner</title>
+    <meta name="description" content="Plan Bengaluru Namma Metro trips: next trains, interchanges, journey time and fares across the Purple, Green, Yellow and Pink lines." />
+    <meta name="theme-color" content="#000000" />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Namma Metro Trip Planner" />
+    <meta property="og:description" content="Next trains, interchanges and fares across the Purple, Green, Yellow and Pink lines." />
+    <meta property="og:image" content="og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script>
+      // Apply the saved theme before first paint (avoids a flash of the wrong theme).
+      try {
+        var t = JSON.parse(localStorage.getItem('nm.theme') || '"dark"');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Kannada:wdth,wght@75..125,400..800&family=Anek+Latin:wdth,wght@75..125,400..800&family=Hind:wght@400;500;600&family=Martian+Mono:wdth,wght@75..112.5,400..600&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div id="root"></div>

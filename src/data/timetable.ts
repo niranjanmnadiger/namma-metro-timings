@@ -15,7 +15,7 @@ type ScheduleMap = Partial<Record<DirectionKey, HeadwayWindow[]>>
 // DATA ACCURACY DISCLAIMER
 //
 // This timetable is based on static headway windows published by BMRC on
-// bmrc.co.in (April 2025 revision). Real-world service will differ because:
+// bmrc.co.in (April 2025 revision); Pink Line added Nov 2026. Real-world service will differ because:
 //
 //  1. SHORT-RUN / LOOP TRAINS — BMRC operates partial-route "short loop"
 //     trains on L1 (Purple) during peak hours, e.g. Kempegowda <->
@@ -102,6 +102,21 @@ export const HEADWAYS: Record<ScheduleKey, ScheduleMap> = {
       { s: '10:30', e: '16:06', f: 14 },
       { s: '16:06', e: '22:42', f: 9 },
     ],
+    // Pink: peak 8–12 & 16–21 every 8 min, else every 10; last trains 10:50 pm / 10:54 pm
+    pink_fwd: [
+      { s: '04:55', e: '08:00', f: 10 },
+      { s: '08:00', e: '12:00', f: 8 },
+      { s: '12:00', e: '16:00', f: 10 },
+      { s: '16:00', e: '21:00', f: 8 },
+      { s: '21:00', e: '22:50', f: 10 },
+    ],
+    pink_rev: [
+      { s: '05:00', e: '08:00', f: 10 },
+      { s: '08:00', e: '12:00', f: 8 },
+      { s: '12:00', e: '16:00', f: 10 },
+      { s: '16:00', e: '21:00', f: 8 },
+      { s: '21:04', e: '22:54', f: 10 },
+    ],
   },
 
   // TUESDAY – FRIDAY
@@ -167,6 +182,21 @@ export const HEADWAYS: Record<ScheduleKey, ScheduleMap> = {
       { s: '22:20', e: '22:30', f: 10 },
       { s: '22:30', e: '22:42', f: 12 },
     ],
+    // Pink: peak 8–12 & 16–21 every 8 min, else every 10; last trains 10:50 pm / 10:54 pm
+    pink_fwd: [
+      { s: '06:00', e: '08:00', f: 10 },
+      { s: '08:00', e: '12:00', f: 8 },
+      { s: '12:00', e: '16:00', f: 10 },
+      { s: '16:00', e: '21:00', f: 8 },
+      { s: '21:00', e: '22:50', f: 10 },
+    ],
+    pink_rev: [
+      { s: '06:00', e: '08:00', f: 10 },
+      { s: '08:00', e: '12:00', f: 8 },
+      { s: '12:00', e: '16:00', f: 10 },
+      { s: '16:00', e: '21:00', f: 8 },
+      { s: '21:04', e: '22:54', f: 10 },
+    ],
   },
 
   // SATURDAY
@@ -226,6 +256,21 @@ export const HEADWAYS: Record<ScheduleKey, ScheduleMap> = {
       { s: '10:22', e: '16:12', f: 14 },
       { s: '16:12', e: '22:42', f: 10 },
     ],
+    // Pink: peak 8–12 & 16–21 every 8 min, else every 10; last trains 10:50 pm / 10:54 pm
+    pink_fwd: [
+      { s: '06:00', e: '08:00', f: 10 },
+      { s: '08:00', e: '12:00', f: 8 },
+      { s: '12:00', e: '16:00', f: 10 },
+      { s: '16:00', e: '21:00', f: 8 },
+      { s: '21:00', e: '22:50', f: 10 },
+    ],
+    pink_rev: [
+      { s: '06:00', e: '08:00', f: 10 },
+      { s: '08:00', e: '12:00', f: 8 },
+      { s: '12:00', e: '16:00', f: 10 },
+      { s: '16:00', e: '21:00', f: 8 },
+      { s: '21:04', e: '22:54', f: 10 },
+    ],
   },
 
   // SUNDAY
@@ -269,6 +314,14 @@ export const HEADWAYS: Record<ScheduleKey, ScheduleMap> = {
       { s: '07:00', e: '11:12', f: 18 },
       { s: '11:12', e: '22:24', f: 14 },
       { s: '22:24', e: '22:42', f: 18 },
+    ],
+    // Pink: every 10 min all day; last trains 10:50 pm / 10:54 pm
+    pink_fwd: [
+      { s: '07:00', e: '22:50', f: 10 },
+    ],
+    pink_rev: [
+      { s: '07:00', e: '21:00', f: 10 },
+      { s: '21:04', e: '22:54', f: 10 },
     ],
   },
 }
